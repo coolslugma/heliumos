@@ -19,7 +19,7 @@ cd ..
 
 echo Adding bootsector to disk image...
 cd disk_images
-partcopy ..\source\bootload\bootload.bin 0 200 mikeos.flp 0
+dd count=2 seek=0 bs=512 if=..\source\bootload\bootload.bin of=.\mikeos.flp
 cd ..
 
 echo Mounting disk image...
