@@ -8,7 +8,7 @@
 os_command_line:
 	call os_clear_screen
 
-	mov si, version_msg
+	mov si, cli_msg
 	call os_print_string
 	mov si, help_text
 	call os_print_string
@@ -356,6 +356,7 @@ exit:
 	notfound_msg		db 'File not found', 13, 10, 0
 	version_msg		db 'HeliumOS ', HELIUM_VER, 13, 10, 0
 	mikeos_version_msg	db 'MikeOS ', MIKEOS_VER, 13, 10, 0
+	cli_msg		db 'HeliumOS Command Line', 13, 10, 0
 
 	exit_string		db 'EXIT', 0
 	help_string		db 'HELP', 0

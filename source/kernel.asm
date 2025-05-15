@@ -22,10 +22,7 @@
 
 	BITS 16
 
-	%DEFINE HELIUM_VER '1.1'	; OS version number
-	%DEFINE HELIUM_API_VER 2	; API version for programs to check
-	%DEFINE MIKEOS_VER '4.1'	; OS version number -- compatibility
-	%DEFINE MIKEOS_API_VER 13	; API version for programs to check -- compatibility
+	%INCLUDE "inc/version.inc"
 
 
 	; This is the location in RAM for kernel disk operations, 24K
@@ -115,19 +112,19 @@ os_call_vectors:
 	jmp os_port_byte_out		; 00C9h
 	jmp os_port_byte_in		; 00CCh
 
-
 ; ------------------------------------------------------------------
 ; START OF MAIN KERNEL CODE
 
 os_main:
+	call protected_init	; Enter protected mode.
+.setup_stack:
 	cli				; Clear interrupts
 	mov ax, 0
 	mov ss, ax			; Set stack segment and pointer
 	mov sp, 0FFFFh
 	sti				; Restore interrupts
 
-	cld				; The default direction for string operations
-					; will be 'up' - incrementing address in RAM
+	cld				; The default direction for string operations will be 'up' - incrementing address in RAM
 
 	mov ax, 2000h			; Set all segments to match where kernel is loaded
 	mov ds, ax			; After this, we don't need to bother with
@@ -139,6 +136,7 @@ os_main:
 	mov bx, 0			; to be bright, and not blinking
 	int 10h
 
+.begin_boot:
 	call os_seed_random		; Seed random number generator
 
 
@@ -380,6 +378,7 @@ not_bas_extension:
 	%INCLUDE "features/screen.asm"
 	%INCLUDE "features/sound.asm"
 	%INCLUDE "features/string.asm"
+	%INCLUDE "protected.asm"
 
 
 ; ==================================================================
